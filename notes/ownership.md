@@ -8,9 +8,9 @@
 
 ### Copy, Move and Clone
 
-* primitive types with fixed-size implement the copy trait to make copies.
-* "move" means the ownership of the memory is transferred to another owner. String is heap allocated so it is moved. 
-* If we do want to deeply copy the heap data of the String, not just the stack data, we can use a method called clone.
+* primitive types with fixed-size implement the `copy` trait to make copies.
+* `move` means the ownership of the memory is transferred to another owner. String is heap allocated so it is moved. 
+* If we do want to deeply copy the heap data of the String, not just the stack data, we can use a method called `clone`.
 
 ## How Ownership Moves
 There are three ways to transfer ownership from one variable to another in a Rust program:
@@ -28,10 +28,10 @@ Borrowing is done by using reference to a variable if we dont want to move the v
 
 1. The scope of the borrower cannot outlast the scope of the original owner.
 2. There can be multiple immutable references, but only one mutable reference.
-3. At any given time, you can have either one mutable reference or any number of immutable refrences. (We can have a mutable reference once the use of immutable reference is finished.)
-4. References must always be valid (can’t be null). (Cannot return a reference for a value declared in the scope of the returning function. Compiler error)
+At any given time, you can have either one mutable reference or any number of immutable refrences. (We can have a mutable reference once the use of immutable reference is finished.)
+3. References must always be valid (can’t be null). (Cannot return a reference for a value declared in the scope of the returning function: compile time error)
 
-References Are Immutable by Default. It can be made mutable with mut, but only if its owner is also mutable.
+References are immutable by default. It can be made mutable with `mut`, but only if its owner is also mutable.
 
 ### Slices
 Slices let you reference a contiguous sequence of elements within a collection instead of referencing the entire collection. Slices dont take ownership of the underlying data.
