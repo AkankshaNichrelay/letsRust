@@ -28,7 +28,7 @@ Borrowing is done by using reference to a variable if we dont want to move the v
 
 1. The scope of the borrower cannot outlast the scope of the original owner.
 2. There can be multiple immutable references, but only one mutable reference.
-3. At any given time, you can have either one mutable reference or any number of immutable refrences. (We can have a mutable reference once the use of mutable reference is finished.)
+3. At any given time, you can have either one mutable reference or any number of immutable refrences. (We can have a mutable reference once the use of immutable reference is finished.)
 4. References must always be valid (can’t be null). (Cannot return a reference for a value declared in the scope of the returning function. Compiler error)
 
 References Are Immutable by Default. It can be made mutable with mut, but only if its owner is also mutable.
