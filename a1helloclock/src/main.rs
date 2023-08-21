@@ -10,7 +10,9 @@ use std::time::{SystemTime, Duration};
  */
 
 /*
-rust uses a standard package management system in which packages (crates) can be referenced by name and automatically tracked by version. in the rust world, the idiomatic (it never gets old!) place to find packages is crates.io 
+rust uses a standard package management system in which packages (crates) can be
+referenced by name and automatically tracked by version. In the rust world,
+the idiomatic place to find packages is crates.io 
  */
 
 extern crate chrono;
@@ -40,7 +42,7 @@ fn main() {
     };
     println!("tert: good {}, world!", am_pm);
 
-    // match is like the case statement. a match must cover all possible cases.
+    // match is like the case statement. A match must cover all possible cases.
     let am_or_pm = match local_now.hour12() {
         (false, _) => "morning",
         (_, _) => "evening",
@@ -52,5 +54,7 @@ fn main() {
 }
 
 /*
-traits are like supercharged go interfaces. implementing a trait in rust produces approximately the same effect as implementing an interface in go. in rust, though, implementing a trait must be done explicitly ( impl mytrait for mytype {} ).
+Traits are like supercharged go interfaces. Implementing a trait in rust produces
+approximately the same effect as implementing an interface in Go. In rust, though,
+implementing a trait must be done explicitly ( impl mytrait for mytype {} ).
  */
