@@ -41,7 +41,14 @@ impl Config {
 
         // This only checks if env variable is set and not the actual value assigned to the var
         // use `unset CASE_SENSITIVE` or `export CASE_SENSITIVE=t/f` to change
-        let case_sensitive = env::var("CASE_SENSITIVE").is_ok();
+        // let case_sensitive = env::var("CASE_SENSITIVE").is_ok();
+        let case_sensitive = match env::var("CASE_SENSITIVE") {
+            Err(_) => false,
+            Ok(flag) => match flag.trim() {
+                "true" => true,
+                _ => false
+            }
+        };
 
         // if we wanted to store references to strings, we would need to use lifetimes.
         Ok(Config { query, filename, case_sensitive })
