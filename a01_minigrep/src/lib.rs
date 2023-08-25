@@ -51,7 +51,16 @@ pub fn search_case_insensitive<'a>(
     query: &str,
     contents: &'a str
 ) -> Vec<&'a str> {
-    vec![]
+    let query = query.to_lowercase();
+    let mut results = Vec::new();
+
+    for line in contents.lines() {
+        if line.to_lowercase().contains(&query) {
+            results.push(line)
+        }
+    }
+
+    results
 }
 
 #[cfg(test)]
@@ -77,6 +86,7 @@ Duct tape.
 Rust:
 safe, fast, productive.
 Pick three.
+Trust me.
 ";
         assert_eq!(
             vec!["Rust:", "Trust me."],
