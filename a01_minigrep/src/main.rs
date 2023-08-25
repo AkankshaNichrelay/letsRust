@@ -1,6 +1,7 @@
 use std::env;
 use std::fs;
 use std::process;
+use std::error::Error;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -15,14 +16,20 @@ fn main() {
     println!("Searching for {}", config.query);
     println!("Searching for {}", config.filename);
 
-    run(config);
+    // if the call to run results in an error variant then execute the code inside this block.
+    if let Err(e) = run(config) {
+        println!("Application error: {}", e);
+        process::exit(1);
+    }
 }
 
-fn run(config: Config) {
-    let contents = fs::read_to_string(config.filename);
-        .expect("Something went wrong reading thefile");
-
+// here we are saying return any type of error
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    // ? operator is used for early exit an function with return type that's compatible
+    //  with the value of the ? is used on
+    let contents = fs::read_to_string(config.filename)?;
     println!("file contents: {}", contents);
+    Ok(())
 }
 
 struct Config {
