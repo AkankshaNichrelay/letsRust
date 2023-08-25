@@ -8,17 +8,18 @@ fn main() {
 
     let config = Config::new(&args).unwrap_or_else(
         |err| {
-            println!("Problem parsing arguments: {}", err);
+            eprintln!("Problem parsing arguments: {}", err);
             process::exit(1);
         }
     );
 
-    println!("Searching for {}", config.query);
-    println!("Searching for {}", config.filename);
+    println!("Searching for `{}`", config.query);
+    println!("In file `{}`", config.filename);
+    println!("Results:");
 
     // if the call to run results in an error variant then execute the code inside this block.
     if let Err(e) = minigrep::run(config) {
-        println!("Application error: {}", e);
+        eprintln!("Application error: {}", e);
         process::exit(1);
     }
 }

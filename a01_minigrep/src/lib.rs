@@ -1,6 +1,7 @@
 // this is the root of our library crate
 use std::fs;
 use std::error::Error;
+use std::env;
 
 // here we are saying return any type of error
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
@@ -8,7 +9,13 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     //  with the value of the ? is used on
     let contents = fs::read_to_string(config.filename)?;
 
-    for line in search(&config.query, &contents) {
+    let search_results = if config.case_sensitive {
+        search(&config.query, &contents)
+    } else {
+        search_case_insensitive(&config.query, &contents)
+    };
+
+    for line in search_results {
         println!("{}", line);    
     }
 
@@ -18,6 +25,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 pub struct Config {
     pub query: String,
     pub filename: String,
+    pub case_sensitive: bool,
 }
 
 impl Config {
@@ -30,8 +38,13 @@ impl Config {
 
         let query = args[1].clone(); // because we dont want ownership of these strings
         let filename = args[2].clone();
+
+        // This only checks if env variable is set and not the actual value assigned to the var
+        // use `unset CASE_SENSITIVE` or `export CASE_SENSITIVE=t/f` to change
+        let case_sensitive = env::var("CASE_SENSITIVE").is_ok();
+
         // if we wanted to store references to strings, we would need to use lifetimes.
-        Ok(Config { query, filename })
+        Ok(Config { query, filename, case_sensitive })
     }
 }
 
