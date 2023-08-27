@@ -2,7 +2,7 @@
 
 Generics, traits and lifetimes are all ways to reduce code duplication.
 
-Generics allow us to abstract concrete type to reduce code duplication. Your program doesn't take a performance hit as compiler actually does the duplication for you at compile time.
+Generics allow us to abstract concrete type to reduce code duplication. Your program doesn't take a performance hit as compiler actually does the duplication for you at compile time. (Static distpatch)
 
 Traits allow us to define a shared behavior (a set of methods that are shared) across different types.
 
@@ -53,3 +53,27 @@ The first rule is that the compiler assigns a lifetime parameter to each paramet
 
 ## Static Lifetime
 Static lifetime means that the reference could live as long as the duration of the program. All string literals have a static lifetime, that is because string literals are stored in the program binary.
+
+## Trait Objects Vs Generics with trait bound
+```
+pub struct Screen {
+    pub components: Vec<Box<dyn Draw>>,
+}
+```
+
+Versus
+
+```
+pub struct Screen<T:Draw> {
+    pub components: Vec<T>,
+}
+```
+
+The difference is that when using generics, we are limited to one type, meaning our screen components could only store buttons or sliders or text input fields but it cant store a mixture of the three.
+
+So if your list is homogeneous, then you should use generics with trait bounds because there is no runtime cost however if you need the flexibility to store any type that implements a certain trait then you would want to use trait objects which do have a performance cost.
+
+**Static Dispatch vs Dynamic Dispatch**
+The compile time implementation behavior in generics is called Static Dispatch, can only happen when compiler knows concrete fucntions you are calling at compile time.
+The opposite is dynamic dispatch which happens when compiler does not know the concrete methods you are calling at compile time, so it figures it out at compile time.
+When using trait objects, the rust compiler must use dynamic dispatch that's because the compiler doesn't know all the concrete objects that are going to be used at compile time. 
