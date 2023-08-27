@@ -1,10 +1,15 @@
 // in order to make our library crate our primary crate, we move main.rs into bin folder.
 
-use std::thread;
+use std::{thread, sync::{mpsc, Arc, Mutex}};
 
 pub struct ThreadPool {
-    threads: Vec<thread::JoinHandle<()>>,
-}
+    workers: Vec<Worker>,
+
+    //sender if of type Sender from mpsc module and we are sending jobs across threads
+    sender: mpsc::Sender<Job>,    
+}  
+
+struct Job;
 
 impl ThreadPool {
     /// Create a new ThreadPool
@@ -17,14 +22,27 @@ impl ThreadPool {
     pub fn new(size: usize) -> ThreadPool {
         assert!(size > 0);  // function will panic if not true
 
-        let threads = Vec::with_capacity(size);
+        let (sender, receiver) = mpsc::channel();
+        let receiver 
+                    = Arc::new(Mutex::new(receiver));
+        let mut workers = Vec::with_capacity(size);
 
-        // populate the threads
-        for _ in 0..size {
-            // create threads
+        // create threads
+        for id in 0..size {
+            /*
+            /// This has an error on passing the receiver saying that we have already
+            /// been moved the value in prev iteration. What we want is for our workers to have
+            /// shared ownership of the receiver. In addition, listening for jobs requires mutating 
+            /// the receiver so we want shared ownership and mutability. We can get this behavior by
+            /// using smart pointers but because we are working with threads, we want thread-safe
+            /// smart pointers. For thread-safe mutliple ownership, we can use the arc smart pointer and
+            /// for thread-safe mutability, we can use the mutex smart pointer.
+            */
+            // workers.push(Worker::new(id, receiver);
+            workers.push(Worker::new(id, Arc::clone(&receiver)));
         }
 
-        ThreadPool { threads }
+        ThreadPool { workers, sender }
     }
 
     pub fn execute<F>(&self, f: F) 
@@ -49,8 +67,10 @@ struct Worker {
 }
 
 impl Worker {
-    fn new(id: usize) -> Worker {
-        let thread = thread::spawn(||{});
+    fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
+        let thread = thread::spawn(||{
+            receiver;
+        });
         Worker { id, thread }
     } 
 }
